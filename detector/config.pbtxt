@@ -1,0 +1,89 @@
+name: "detector"
+platform: "tensorrt_plan"
+max_batch_size: 32
+input [
+  {
+    name: "data"
+    data_type: TYPE_FP32
+    dims: [ 3, 480, 640 ]
+  }
+]
+output [
+  {
+    name: "face_rpn_bbox_pred_stride32"
+    data_type: TYPE_FP32
+    dims: [ 8, 15, 20 ]
+  },
+  {
+    name: "face_rpn_landmark_pred_stride32"
+    data_type: TYPE_FP32
+    dims: [ 20, 15, 20 ]
+  },
+  {
+    name: "face_rpn_cls_prob_reshape_stride32"
+    data_type: TYPE_FP32
+    dims: [ 4, 15, 20 ]
+  },
+  {
+    name: "face_rpn_type_prob_reshape_stride32"
+    data_type: TYPE_FP32
+    dims: [ 6, 15, 20 ]
+  },
+  {
+    name: "face_rpn_bbox_pred_stride16"
+    data_type: TYPE_FP32
+    dims: [ 8, 30, 40 ]
+  },
+  {
+    name: "face_rpn_landmark_pred_stride16"
+    data_type: TYPE_FP32
+    dims: [ 20, 30, 40 ]
+  },
+  {
+    name: "face_rpn_cls_prob_reshape_stride16"
+    data_type: TYPE_FP32
+    dims: [ 4, 30, 40 ]
+  },
+  {
+    name: "face_rpn_type_prob_reshape_stride16"
+    data_type: TYPE_FP32
+    dims: [ 6, 30, 40 ]
+  },
+  {
+    name: "face_rpn_bbox_pred_stride8"
+    data_type: TYPE_FP32
+    dims: [ 8, 60, 80 ]
+  },
+  {
+    name: "face_rpn_landmark_pred_stride8"
+    data_type: TYPE_FP32
+    dims: [ 20, 60, 80 ]
+  },
+  {
+    name: "face_rpn_cls_prob_reshape_stride8"
+    data_type: TYPE_FP32
+    dims: [ 4, 60, 80 ]
+  },
+  {
+    name: "face_rpn_type_prob_reshape_stride8"
+    data_type: TYPE_FP32
+    dims: [ 6, 60, 80 ]
+  }
+]
+
+instance_group [
+   {
+      count: 1
+      kind: KIND_GPU
+   }
+]
+
+dynamic_batching { 
+  preferred_batch_size: [ 16, 32 ]
+  max_queue_delay_microseconds: 100 }
+
+# optimization { execution_accelerators {
+#   gpu_execution_accelerator : [ {
+#     name : "tensorrt"
+#     parameters { key: "precision_mode" value: "FP16" }}]
+# }}

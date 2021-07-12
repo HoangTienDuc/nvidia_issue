@@ -1,0 +1,29 @@
+name: "arcface_preprocess"
+backend: "dali"
+max_batch_size: 32
+input [
+{
+    name: "ARCFACE_INPUT_0"
+    data_type: TYPE_UINT8
+    dims: [ 112, 112, 3 ]
+}
+]
+
+output [
+{
+    name: "ARCFACE_OUTPUT_0"
+    data_type: TYPE_FP32
+    dims: [ 3, 112, 112 ]
+}
+]
+
+instance_group [
+   {
+      count: 1
+      kind: KIND_GPU
+   }
+]
+
+dynamic_batching { 
+  preferred_batch_size: [ 4, 8, 16, 32 ]
+  max_queue_delay_microseconds: 100 }
